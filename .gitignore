@@ -134,6 +134,19 @@ artifacts/
 API/bin
 API/obj
 
+client/node_modules
+client/*.local
+client/logs
+client/*.log
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/pnpm-debug.log*
+client/lerna-debug.log*
+client/dist
+client/dist-ssr
+
+
 # StyleCop
 StyleCopReport.xml
 
