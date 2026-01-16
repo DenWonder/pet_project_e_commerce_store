@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,24 +16,11 @@ public class BasketController(StoreContext context): BaseApiController
         
         if(basket == null) return NoContent();
 
-        return new BasketDto
-        {
-            BasketId = basket.BasketId,
-            Items = basket.Items.Select(x => new BasketItemDto
-            {
-                ProductId = x.ProductId,
-                Name = x.Product.Name,
-                Price = x.Product.Price,
-                Brand = x.Product.Brand,
-                Type = x.Product.Type,
-                PictureUrl = x.Product.PictureUrl,
-                Quantity = x.Quantity
-            }).ToList()
-        };
+        return basket.ToDto();
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddItemToBasket(int productId, int quantity)
+    public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
     {
         var basket = await RetrieveBasket();
         basket ??= CreateBasket(); 
@@ -42,7 +30,7 @@ public class BasketController(StoreContext context): BaseApiController
 
         basket.AddItem(product, quantity);
         var result = await context.SaveChangesAsync() > 0;
-        if (result) return CreatedAtAction(nameof(GetBasket), basket);
+        if (result) return CreatedAtAction(nameof(GetBasket), basket.ToDto());
         return BadRequest("Problem with basket updating");
     }
 
@@ -53,7 +41,16 @@ public class BasketController(StoreContext context): BaseApiController
     public async Task<ActionResult> RemoveItemFromBasket(int productId, int quantity)
     {
         var basket = await RetrieveBasket();
-        return StatusCode(200);
+
+        if (basket == null) return BadRequest("Unable to retrieve basket");
+
+        basket.RemoveItem(productId, quantity);
+
+        var result = await context.SaveChangesAsync() > 0;
+
+        if (result) return Ok();
+
+        return BadRequest("Problem updating basket");
     }
     
     private async Task<Basket?> RetrieveBasket()
