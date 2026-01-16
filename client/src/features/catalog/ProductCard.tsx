@@ -45,7 +45,7 @@ export default function ProductCard({product}: Props){
                 <Button 
                     disabled={isLoading}
                     onClick={() => addBasketItem({
-                        productId: product.id, 
+                        product, 
                         quantity: 1
                     })}
                 >Add to card</Button>

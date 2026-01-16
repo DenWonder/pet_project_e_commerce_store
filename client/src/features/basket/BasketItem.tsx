@@ -59,7 +59,7 @@ export default function BasketItem({ item }: Props) {
                         </IconButton>
                         <Typography variant="h6">{item.quantity}</Typography>
                         <IconButton
-                            // onClick={() => addBasketItem({product: item, quantity: 1})}
+                            onClick={() => addBasketItem({product: item, quantity: 1})}
                             color="success"
                             size="small"
                             sx={{border: 1, borderRadius: 1, minWidth: 0}}
