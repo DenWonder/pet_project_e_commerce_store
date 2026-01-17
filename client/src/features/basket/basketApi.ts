@@ -1,6 +1,7 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {baseQueryWithErrorHandling} from "../../app/api/baseApi.ts";
 import {type Basket, Item} from "../../app/models/basket.ts";
+import type {Product} from "../../app/models/product.ts";
 
 export const basketApi = createApi({
     reducerPath: 'basketApi',
@@ -36,9 +37,28 @@ export const basketApi = createApi({
             query: ({productId, quantity}) => ({
                 url: `basket?productId=${productId}&quantity=${quantity}`,
                 method: 'DELETE'
-            })
+            }),
+            onQueryStarted: async ({productId, quantity}, {dispatch, queryFulfilled}) => {
+                const patchResult = dispatch(
+                    basketApi.util.updateQueryData('fetchBasket', undefined, (draft) => {
+                        const itemIndex = draft.items.findIndex(item => item.productId === productId);
+                        if(itemIndex >= 0){
+                            draft.items[itemIndex].quantity -= quantity;
+                            if(draft.items[itemIndex].quantity <= 0){
+                                draft.items.splice(itemIndex, 1);
+                            }
+                        }
+                    })
+                )
+                try {
+                    await queryFulfilled;
+                } catch (error) {
+                    console.log(error);
+                    patchResult.undo();
+                }
+            }
         })
     }),
 });
 
-export const {useFetchBasketQuery, useAddBasketItemMutation} = basketApi;
+export const {useFetchBasketQuery, useAddBasketItemMutation, useRemoveBasketItemMutation} = basketApi;
