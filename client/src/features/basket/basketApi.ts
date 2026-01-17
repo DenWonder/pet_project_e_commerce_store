@@ -3,6 +3,10 @@ import {baseQueryWithErrorHandling} from "../../app/api/baseApi.ts";
 import {type Basket, Item} from "../../app/models/basket.ts";
 import type {Product} from "../../app/models/product.ts";
 
+function isBasketItem(product: Product | Item): product is Item {
+    return (product as Item).quantity !== undefined;
+}
+
 export const basketApi = createApi({
     reducerPath: 'basketApi',
     baseQuery: baseQueryWithErrorHandling,
@@ -12,19 +16,24 @@ export const basketApi = createApi({
             query: () => 'basket',
             providesTags: ['Basket']
         }),
-        addBasketItem: builder.mutation<Basket, {product: Product,  quantity: number}>({
-            query: ({product, quantity}) => ({
-                url: `basket?productId=${product.id}&quantity=${quantity}`, 
-                method: 'POST'
-            }),
-            onQueryStarted: async ({product, quantity}, {dispatch, queryFulfilled}) => {
+        addBasketItem: builder.mutation<Basket, { product: Product | Item, quantity: number }>({
+            query: ({ product, quantity }) => {
+                const productId = isBasketItem(product) ? product.productId : product.id;
+                return {
+                    url: `basket?productId=${productId}&quantity=${quantity}`,
+                    method: 'POST'
+                }
+            },
+            onQueryStarted: async ({ product, quantity }, { dispatch, queryFulfilled }) => {
                 const patchResult = dispatch(
                     basketApi.util.updateQueryData('fetchBasket', undefined, (draft) => {
-                        const existingItem = draft.items.find(item => item.productId === product.id);
-                        if (existingItem) existingItem.quantity += quantity;
-                        else draft.items.push(new Item(product,  quantity));
+                        const productId = isBasketItem(product) ? product.productId : product.id;
+                        const existingItem = draft.items.find(item => item.productId === productId);
+                            if (existingItem) existingItem.quantity += quantity;
+                            else draft.items.push(isBasketItem(product)
+                                ? product : {...product, productId: product.id, quantity});
                     })
-                );
+                )
                 try {
                     await queryFulfilled;
                 } catch (error) {
