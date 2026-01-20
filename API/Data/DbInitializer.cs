@@ -27,7 +27,7 @@ public class DbInitializer
          {
                 Name = "Johnnie Walker Red Label 0.7",
                 Description = "Blended Scotch whisky, bold and smoky",
-                Price = 1500,
+                Price = 15,
                 PictureUrl = "/images/products/JW_Red_1.png",
                 Type = "Whiskey",
                 Brand = "Johnnie Walker",
@@ -37,7 +37,7 @@ public class DbInitializer
             {
                 Name = "Johnnie Walker Black Label 0.7",
                 Description = "12 years old blended Scotch whisky",
-                Price = 2900,
+                Price = 29,
                 PictureUrl = "/images/products/JW_Black_1.png",
                 Type = "Whiskey",
                 Brand = "Johnnie Walker",
@@ -47,7 +47,7 @@ public class DbInitializer
             {
                 Name = "Jameson Irish Whiskey 0.7",
                 Description = "Triple distilled Irish whiskey",
-                Price = 1800,
+                Price = 18,
                 PictureUrl = "/images/products/Jameson_1.png",
                 Type = "Whiskey",
                 Brand = "Jameson",
@@ -57,7 +57,7 @@ public class DbInitializer
             {
                 Name = "Jack Daniel’s Old No.7 0.7",
                 Description = "Tennessee whiskey charcoal mellowed",
-                Price = 2200,
+                Price = 22,
                 PictureUrl = "/images/products/JackDaniels_1.png",
                 Type = "Whiskey",
                 Brand = "Jack Daniel’s",
@@ -67,7 +67,7 @@ public class DbInitializer
             {
                 Name = "Chivas Regal 12 0.7",
                 Description = "12 years old blended Scotch whisky",
-                Price = 2600,
+                Price = 26,
                 PictureUrl = "/images/products/Chivas12_1.png",
                 Type = "Whiskey",
                 Brand = "Chivas Regal",
@@ -77,7 +77,7 @@ public class DbInitializer
             {
                 Name = "Glenfiddich 12 0.7",
                 Description = "Single malt Scotch whisky",
-                Price = 4200,
+                Price = 42,
                 PictureUrl = "/images/products/Glenfiddich12_1.png",
                 Type = "Whiskey",
                 Brand = "Glenfiddich",
@@ -87,7 +87,7 @@ public class DbInitializer
             {
                 Name = "Ballantine’s Finest 0.7",
                 Description = "Smooth blended Scotch whisky",
-                Price = 1700,
+                Price = 17,
                 PictureUrl = "/images/products/Ballantines_1.png",
                 Type = "Whiskey",
                 Brand = "Ballantine’s",
@@ -97,7 +97,7 @@ public class DbInitializer
             {
                 Name = "Absolut Vodka 0.7",
                 Description = "Swedish premium vodka",
-                Price = 1400,
+                Price = 14,
                 PictureUrl = "/images/products/Absolut_1.png",
                 Type = "Vodka",
                 Brand = "Absolut",
@@ -107,7 +107,7 @@ public class DbInitializer
             {
                 Name = "Grey Goose Vodka 0.7",
                 Description = "French premium vodka",
-                Price = 3100,
+                Price = 31,
                 PictureUrl = "/images/products/GreyGoose_1.png",
                 Type = "Vodka",
                 Brand = "Grey Goose",
@@ -117,7 +117,7 @@ public class DbInitializer
             {
                 Name = "Finlandia Vodka 0.7",
                 Description = "Classic Finnish vodka",
-                Price = 1200,
+                Price = 12,
                 PictureUrl = "/images/products/Finlandia_1.png",
                 Type = "Vodka",
                 Brand = "Finlandia",
@@ -127,7 +127,7 @@ public class DbInitializer
             {
                 Name = "Bacardi Carta Blanca 0.7",
                 Description = "White rum, light and smooth",
-                Price = 1600,
+                Price = 16,
                 PictureUrl = "/images/products/Bacardi_1.png",
                 Type = "Rum",
                 Brand = "Bacardi",
@@ -137,7 +137,7 @@ public class DbInitializer
             {
                 Name = "Captain Morgan Spiced Gold 0.7",
                 Description = "Spiced rum with vanilla notes",
-                Price = 1900,
+                Price = 19,
                 PictureUrl = "/images/products/CaptainMorgan_1.png",
                 Type = "Rum",
                 Brand = "Captain Morgan",
@@ -147,7 +147,7 @@ public class DbInitializer
             {
                 Name = "Havana Club 7 Años 0.7",
                 Description = "Aged Cuban dark rum",
-                Price = 2400,
+                Price = 24,
                 PictureUrl = "/images/products/Havana7_1.png",
                 Type = "Rum",
                 Brand = "Havana Club",
@@ -157,7 +157,7 @@ public class DbInitializer
             {
                 Name = "Beefeater London Dry Gin 0.7",
                 Description = "Classic London dry gin",
-                Price = 1800,
+                Price = 18,
                 PictureUrl = "/images/products/Beefeater_1.png",
                 Type = "Gin",
                 Brand = "Beefeater",
@@ -167,7 +167,7 @@ public class DbInitializer
             {
                 Name = "Bombay Sapphire Gin 0.7",
                 Description = "Premium gin with botanicals",
-                Price = 2300,
+                Price = 23,
                 PictureUrl = "/images/products/Bombay_1.png",
                 Type = "Gin",
                 Brand = "Bombay Sapphire",
@@ -177,7 +177,7 @@ public class DbInitializer
             {
                 Name = "Jägermeister 0.7",
                 Description = "Herbal liqueur with 56 herbs",
-                Price = 1700,
+                Price = 17,
                 PictureUrl = "/images/products/Jagermeister_1.png",
                 Type = "Liqueur",
                 Brand = "Jägermeister",
@@ -187,7 +187,7 @@ public class DbInitializer
             {
                 Name = "Baileys Original 0.7",
                 Description = "Irish cream liqueur",
-                Price = 2000,
+                Price = 20,
                 PictureUrl = "/images/products/Baileys_1.png",
                 Type = "Liqueur",
                 Brand = "Baileys",
@@ -197,7 +197,7 @@ public class DbInitializer
             {
                 Name = "Martini Bianco 1.0",
                 Description = "Sweet white vermouth",
-                Price = 1300,
+                Price = 13,
                 PictureUrl = "/images/products/MartiniBianco_1.png",
                 Type = "Vermouth",
                 Brand = "Martini",
@@ -207,7 +207,7 @@ public class DbInitializer
             {
                 Name = "Martini Rosso 1.0",
                 Description = "Classic red vermouth",
-                Price = 1300,
+                Price = 13,
                 PictureUrl = "/images/products/MartiniRosso_1.png",
                 Type = "Vermouth",
                 Brand = "Martini",
@@ -217,7 +217,7 @@ public class DbInitializer
             {
                 Name = "Campari Bitter 0.7",
                 Description = "Italian bitter aperitif",
-                Price = 1900,
+                Price = 19,
                 PictureUrl = "/images/products/Campari_1.png",
                 Type = "Aperitif",
                 Brand = "Campari",
