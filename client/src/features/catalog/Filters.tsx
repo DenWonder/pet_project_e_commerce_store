@@ -1,5 +1,6 @@
 import {useFetchFiltersQuery} from "./catalogApi.ts";
-import {Box, Checkbox, FormControl, FormControlLabel, FormGroup, Paper, Radio, TextField} from "@mui/material";
+import {Box, Checkbox, FormControl, FormControlLabel, FormGroup, Paper, Radio} from "@mui/material";
+import Search from "./Search.tsx";
 
 const sortOptions = [
     {value: 'name', label: 'Alphabetical'},
@@ -10,15 +11,11 @@ const sortOptions = [
 
 export default function Filters(){
     const {data} = useFetchFiltersQuery();
-    console.log(data);
+    
     return (
         <Box display="flex" flexDirection="column" gap={3}>
             <Paper>
-                <TextField
-                    label='Search products'
-                    variant='outlined'
-                    fullWidth
-                ></TextField>
+                <Search />
             </Paper>
             <Paper sx={{p:3}}>
                 <FormControl>
