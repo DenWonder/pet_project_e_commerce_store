@@ -1,12 +1,15 @@
 import ProductList from "./ProductList.tsx";
 import {useFetchProductsQuery} from "./catalogApi.ts";
-import {Grid2} from "@mui/material";
+import {Grid2, Typography} from "@mui/material";
 import Filters from "./Filters.tsx";
-import {useAppSelector} from "../../app/store/store.ts";
+import {useAppDispatch, useAppSelector} from "../../app/store/store.ts";
+import AppPagination from "../../app/shared/components/AppPagination.tsx";
+import {setPageNumber} from "./catalogSlice.ts";
 
 export default function Catalog() {
     const productsParams = useAppSelector(state => state.catalog);
     const {data, isLoading} = useFetchProductsQuery(productsParams);
+    const dispatch = useAppDispatch();
     
     if (isLoading || !data) return <div>Loading...</div>;
     
@@ -16,7 +19,18 @@ export default function Catalog() {
                 <Filters />
             </Grid2>
             <Grid2 size={9}>
-                <ProductList products={data} />
+                {data.items && data.items.length > 0 ? (
+                    <>
+                        <ProductList products={data.items} />
+                        <AppPagination
+                            metadata={data.pagination}
+                            onPageChange={(page: number) => dispatch(setPageNumber(page))}
+                        />
+                    </> 
+                ) : (
+                    <Typography variant="h5">No results. Try to change filters</Typography>
+                )}
+
             </Grid2>
         </Grid2>
     )
