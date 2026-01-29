@@ -10,6 +10,7 @@ import NotFound from "../errors/NotFound.tsx";
 import BasketPage from "../../features/basket/BasketPage.tsx";
 import CheckoutPage from "../../features/checkout/CheckoutPage.tsx";
 import LoginForm from "../../features/account/LoginForm.tsx";
+import RegisterForm from "../../features/account/RegisterForm.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
             {path: 'checkout', element: <CheckoutPage />},
             {path: 'server-error', element: <ServerError />},
             {path: 'login', element: <LoginForm />},
+            {path: 'register', element: <RegisterForm />},
             {path: 'not-found', element: <NotFound />},
             {path: '*', element: <Navigate replace to='/not-found' />}
         ]
