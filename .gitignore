@@ -133,6 +133,9 @@ project.fragment.lock.json
 artifacts/
 API/bin
 API/obj
+API/store.db
+API/appsettings.Development.json
+API/appsettings.json
 
 client/node_modules
 client/*.local
@@ -448,6 +451,7 @@ MigrationBackup/
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea
 
 # AWS User-specific
 .idea/**/aws.xml
