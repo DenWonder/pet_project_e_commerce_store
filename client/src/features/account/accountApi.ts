@@ -10,8 +10,8 @@ export const accountApi = createApi({
     baseQuery: baseQueryWithErrorHandling,
     tagTypes: ['UserInfo'],
     endpoints:(builder) => ({
-        login: builder.mutation<void,  LoginSchema>({
-            query:(creds) => {
+        login: builder.mutation<void, LoginSchema>({
+            query: (creds) => {
                 return {
                     url: 'login?useCookies=true',
                     method: 'POST',
@@ -19,47 +19,48 @@ export const accountApi = createApi({
                 }
             },
             async onQueryStarted(_, {dispatch, queryFulfilled}) {
-                try{
+                try {
                     await queryFulfilled;
                     dispatch(accountApi.util.invalidateTags(['UserInfo']))
-                } catch (e) {
-                    console.log(e);
+                } catch (error) {
+                    console.log(error);
                 }
             }
         }),
-        register: builder.mutation<void,  object>({
-            query:(creds) => {
+        register: builder.mutation<void, object>({
+            query: (creds) => {
                 return {
                     url: 'account/register',
                     method: 'POST',
                     body: creds
                 }
             },
-            async onQueryStarted(_, {queryFulfilled}){
-                try{
+            async onQueryStarted(_, {queryFulfilled}) {
+                try {
                     await queryFulfilled;
-                    toast.success('Registration successfully - you can now sign in');
+                    toast.success('Registration successful - you can now sign in!');
                     await router.navigate('/login');
-                } catch (e) {
-                    console.log(e);
+                } catch (error) {
+                    console.log(error);
+                    throw error;
                 }
             }
         }),
         userInfo: builder.query<User, void>({
             query: () => 'account/user-info',
             providesTags: ['UserInfo']
-        })   ,
+        }),
         logout: builder.mutation({
             query: () => ({
                 url: 'account/logout',
                 method: 'POST'
             }),
-            async onQueryStarted(_, {dispatch, queryFulfilled}){
+            async onQueryStarted(_, {dispatch, queryFulfilled}) {
                 await queryFulfilled;
                 dispatch(accountApi.util.invalidateTags(['UserInfo']));
                 await router.navigate('/');
             }
-        })
+        }),
     })
 })
 
