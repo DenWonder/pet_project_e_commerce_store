@@ -24,6 +24,7 @@ export const accountApi = createApi({
                     dispatch(accountApi.util.invalidateTags(['UserInfo']))
                 } catch (error) {
                     console.log(error);
+                    throw(error);
                 }
             }
         }),
