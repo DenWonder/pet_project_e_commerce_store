@@ -4,7 +4,9 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginSchema, type LoginSchema } from "../../../lib/schemas/loginSchema.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLazyUserInfoQuery, useLoginMutation } from "./accountApi";
+import {useLazyUserInfoQuery, useLoginMutation} from "./accountApi";
+import {toast} from "react-toastify";
+
 
 export default function LoginForm() {
     const [login, {isLoading}] = useLoginMutation();
@@ -17,9 +19,14 @@ export default function LoginForm() {
     const navigate = useNavigate();
 
     const onSubmit = async (data: LoginSchema) => {
-        await login(data);
-        await fetchUserInfo();
-        navigate(location.state?.from || '/catalog');
+        try{
+            await login(data).unwrap();
+            await fetchUserInfo().unwrap();
+            navigate(location.state?.from || '/catalog');
+        } catch (error){
+            console.log(error);
+            toast.error("Something wrong with your credentials. Please try again.");
+        }
     }
 
     return (
@@ -54,19 +61,19 @@ export default function LoginForm() {
                         error={!!errors.password}
                         helperText={errors.password?.message}
                     />
-                    <Button 
-                        disabled={isLoading} 
-                        variant="contained" 
+                    <Button
+                        disabled={isLoading}
+                        variant="contained"
                         type="submit"
                     >
                         Sign in
                     </Button>
                     <Typography sx={{ textAlign: 'center' }}>
                         Don't have an account?
-                        <Typography 
-                            sx={{ ml: 2 }} 
-                            component={Link} 
-                            to='/register' 
+                        <Typography
+                            sx={{ ml: 2 }}
+                            component={Link}
+                            to='/register'
                             color='primary'
                         >
                             Sign up
