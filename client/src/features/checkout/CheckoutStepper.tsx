@@ -13,11 +13,13 @@ import {currencyFormat} from "../../../lib/util.ts";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {LoadingButton} from "@mui/lab";
+import {useCreateOrderMutation} from "../orders/orderApi.ts";
 
 const steps = ['Address', 'Payment', 'Review'];
 
 export default function CheckoutStepper(){
     const [activeStep, setActiveStep] = useState(0);
+    const [createOrder] = useCreateOrderMutation();
     const {data, isLoading} = useFetchAddressQuery();
     const [updateAddress] = useUpdateUserAddressMutation();
     const [saveAddressChecked, setSaveAddressChecked] = useState(false);
@@ -62,6 +64,10 @@ export default function CheckoutStepper(){
         try {
             if (!confirmationToken || !basket?.clientSecret)
                 throw new Error('Unable to process payment');
+
+            const orderModel = await createOrderModel();
+            const orderResults = await createOrder(orderModel);
+
             const paymentResult = await stripe?.confirmPayment({
                 clientSecret: basket.clientSecret,
                 redirect: 'if_required',
@@ -71,8 +77,7 @@ export default function CheckoutStepper(){
             });
 
             if (paymentResult?.paymentIntent?.status === 'succeeded') {
-                navigate('/checkout/success',
-                );
+                navigate('/checkout/success', {state: orderResults});
                  clearBasket();
             } else if (paymentResult?.error) {
                 throw new Error(paymentResult.error.message);
@@ -87,6 +92,15 @@ export default function CheckoutStepper(){
         } finally {
             setSubmitting(false)
         }
+    }
+
+    const createOrderModel = async () => {
+        const shippingAddress = await getStripeAddress();
+        const paymentSummary = confirmationToken?.payment_method_preview.card;
+
+        if(!shippingAddress || !paymentSummary) throw new Error('problem with order creation');
+
+        return {shippingAddress, paymentSummary};
     }
     
     const handleBack = () => {
