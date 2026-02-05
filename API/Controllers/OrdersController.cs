@@ -36,13 +36,12 @@ public class OrdersController(StoreContext context): BaseApiController
     public async Task<ActionResult<Order>> CreateOrder(CreateOrderDto orderDto)
     {
         var basket = await context.Baskets.GetBasketWithItems(Request.Cookies["basketId"]);
-        if(basket == null || basket.Items.Count() == 0) return BadRequest("Basket is empty or not found");
+        if (basket == null || basket.Items.Count == 0 || string.IsNullOrEmpty(basket.PaymentIntentId))
+            return BadRequest("Basket is empty or not found");
         
         var items = CreateOrderItems(basket.Items);
-        if (items == null)
-        {
-            return BadRequest("Some items out of stock");
-        }
+        if (items == null) return BadRequest("Some items out of stock");
+        
         var subtotal = items.Sum(x => x.Price * x.Quantity);
         var deliveryFee = CalculateDeliveryFee(subtotal);
 
