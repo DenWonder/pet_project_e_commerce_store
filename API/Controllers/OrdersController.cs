@@ -37,7 +37,9 @@ public class OrdersController(StoreContext context): BaseApiController
     public async Task<ActionResult<Order>> CreateOrder(CreateOrderDto orderDto)
     {
         var basket = await context.Baskets.GetBasketWithItems(Request.Cookies["basketId"]);
-        if (basket == null || basket.Items.Count == 0 || string.IsNullOrEmpty(basket.PaymentIntentId))
+        if (basket == null || 
+            basket.Items.Count == 0 || 
+            string.IsNullOrEmpty(basket.PaymentIntentId))
             return BadRequest("Basket is empty or not found");
         
         var items = CreateOrderItems(basket.Items);
@@ -46,20 +48,29 @@ public class OrdersController(StoreContext context): BaseApiController
         var subtotal = items.Sum(x => x.Price * x.Quantity);
         var deliveryFee = CalculateDeliveryFee(subtotal);
 
-        var order = new Order
+        var order = await context.Orders
+            .Include(x => x.OrderItems)
+            .FirstOrDefaultAsync(x => x.PaymentIntentId == basket.PaymentIntentId);
+
+        if (order == null)
         {
-            OrderItems = items,
-            BuyerEmail = User.GetUserName(),
-            ShippingAddress = orderDto.ShippingAddress,
-            DeliveryFee = deliveryFee,
-            Subtotal = subtotal,
-            PaymentSummary = orderDto.PaymentSummary,
-            PaymentIntentId = basket.PaymentIntentId
-        };
-        
-        context.Orders.Add(order);
-        context.Baskets.Remove(basket);
-        Response.Cookies.Delete("basketId");
+            order = new Order
+            {
+                OrderItems = items,
+                BuyerEmail = User.GetUserName(),
+                ShippingAddress = orderDto.ShippingAddress,
+                DeliveryFee = deliveryFee,
+                Subtotal = subtotal,
+                PaymentSummary = orderDto.PaymentSummary,
+                PaymentIntentId = basket.PaymentIntentId
+            };
+            
+            context.Orders.Add(order);
+        }
+        else
+        {
+            order.OrderItems = items;
+        }
         
         var result = await context.SaveChangesAsync() > 0;
         if(!result) return BadRequest("Problem creating order");
