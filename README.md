@@ -19,7 +19,7 @@
     }
   },
   "ConnectionStrings": {
-    "DefaultConnection": "Data source=store.db"
+    "DefaultConnection": ""
   },
   "StripeSettings": {
     "PublishableKey": "pk_test_########################",
@@ -31,6 +31,13 @@
 
 * Values of __*"PublishableKey"*__ and __*"SecretKey"*__ you can find in your stripe account.
 * Value of __*"WhSecret"*__ you'll get on step #5.
+* Value of __*DefaultConnection*__ is:
+* If you would like to run application locally with just default test collection:
+>Data source=store.db
+
+* And if you want to run it with sql server, which running on docker, use:
+> Server=localhost,1433;Database=shop;User Id=sa;Password=Password@1;TrustServerCertificate=True
+
 
 3. To install require dotnet libs, use command: 
 >dotnet restore

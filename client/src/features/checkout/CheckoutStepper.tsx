@@ -32,8 +32,6 @@ export default function CheckoutStepper(){
     const [submitting, setSubmitting] = useState(false);
     const {basket, clearBasket} = useBasket();
     const navigate = useNavigate();
-    // const [createOrder] = useCreateOrderMutation();
-
 
     let name, restAddress;
     if (data) {
