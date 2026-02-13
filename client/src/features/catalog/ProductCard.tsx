@@ -39,12 +39,19 @@ export default function ProductCard({product}: Props){
                 sx={{color:'secondary.main'}}>
                     {currencyFormat(product.price)}
                 </Typography>
+                {product.quantityInStock <= 0 &&
+                    <Typography
+                        variant="h6"
+                        sx={{color:'primary.main'}}>
+                        Out of stock
+                    </Typography>
+                }
             </CardContent>
             <CardActions
             sx={{justifyContent: "space-between"}}
             >
                 <Button 
-                    disabled={isLoading}
+                    disabled={isLoading || product.quantityInStock <= 0}
                     onClick={() => addBasketItem({
                         product, 
                         quantity: 1
