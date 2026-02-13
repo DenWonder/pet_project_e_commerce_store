@@ -3,6 +3,7 @@ using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.RequestHelpers;
+using API.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class ProductsController(StoreContext context, IMapper mapper) : BaseApiController
+public class ProductsController(StoreContext context, IMapper mapper, 
+    ImageService imageService) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] ProductParams productParams)
@@ -52,6 +54,18 @@ public class ProductsController(StoreContext context, IMapper mapper) : BaseApiC
     {
         var product = mapper.Map<Product>(productDto);
 
+        if (productDto.File != null)
+        {
+            var imageResult = await imageService.AddImageAsync(productDto.File);
+            if (imageResult.Error != null)
+            {
+                return BadRequest(imageResult.Error.Message);
+            }
+            
+            product.PictureUrl = imageResult.SecureUrl.AbsoluteUri;
+            product.PublicId = imageResult.PublicId;
+        }
+        
         context.Products.Add(product);
         var result = await context.SaveChangesAsync() > 0;
         if (result) return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
@@ -66,6 +80,19 @@ public class ProductsController(StoreContext context, IMapper mapper) : BaseApiC
         var product = await context.Products.FindAsync(updateProductDto.Id);
         if(product == null) return NotFound();
         mapper.Map(updateProductDto, product);
+        if (updateProductDto.File != null)
+        {
+            var imageResult = await imageService.AddImageAsync(updateProductDto.File);
+            if (imageResult.Error != null)
+            {
+                return BadRequest(imageResult.Error.Message);
+            }
+            if(!string.IsNullOrEmpty(product.PublicId))
+                await imageService.DeleteImageAsync(product.PublicId);
+            product.PictureUrl = imageResult.SecureUrl.AbsoluteUri;
+            product.PublicId = imageResult.PublicId;
+        }
+        
         var result = await context.SaveChangesAsync() > 0;
         if(result) return NoContent();
         return BadRequest("Problem Updating Product");
