@@ -1,20 +1,24 @@
-import {createProductSchema, type CreateProductSchema} from "../../../lib/schemas/createProductSchema.ts";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Box, Button, Grid2, Paper, Typography} from "@mui/material"
-import AppTextInput from "../../app/shared/components/AppTextInput.tsx";
-import {useFetchFiltersQuery} from "../catalog/catalogApi.ts";
-import AppSelectInput from "../../app/shared/components/AppSelectInput.tsx";
+import { useForm } from "react-hook-form"
+import { createProductSchema, type CreateProductSchema } from "../../../lib/schemas/createProductSchema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Box, Button, Grid2, Paper, Typography } from "@mui/material"
+import AppTextInput from "../../app/shared/components/AppTextInput"
+import { useFetchFiltersQuery } from "../catalog/catalogApi"
+import AppSelectInput from "../../app/shared/components/AppSelectInput"
+import AppDropzone from "../../app/shared/components/AppDropzone"
+/*import { Product } from "../../app/models/product"
+import { useEffect } from "react"
+import { useCreateProductMutation, useUpdateProductMutation } from "./adminApi"
+import { LoadingButton } from "@mui/lab"
+import { handleApiError } from "../../lib/util"*/
+
 
 export default function ProductForm(){
-    const {control, handleSubmit} = useForm({
-        // mode: 'onTouched',
-        // defaultValues: {
-        //     name: ''
-        // },
+    const {control, handleSubmit, watch} = useForm<CreateProductSchema>({
+        mode: 'onTouched',
         resolver: zodResolver(createProductSchema)
     })
-
+    const watchFile = watch('file');
     const {data} = useFetchFiltersQuery();
 
     const onSubmit = (data: CreateProductSchema) => {
@@ -58,10 +62,19 @@ export default function ProductForm(){
                         <AppTextInput type="number" control={control} name="quantityInStock" label="Quantity in stock" />
                     </Grid2>
                     <Grid2 size={12}>
-                        <AppTextInput rows={6} control={control} name="description" label="Description" />
+                        <AppTextInput
+                            control={control}
+                            multiline
+                            rows={4}
+                            name="description"
+                            label='Description' />
                     </Grid2>
-                    <Grid2 size={12}>
-                        <AppTextInput control={control} name="file" label="Image" />
+                    <Grid2 size={12} display="flex" justifyContent="space-between" alignItems="center">
+                        <AppDropzone name="file" control={control} />
+                        {watchFile?.preview ? (
+                            <img src={watchFile.preview} alt='preview of image'
+                                 style={{maxHeight: 200}} />
+                        ) :  null}
                     </Grid2>
                 </Grid2>
                 <Box display='flex' justifyContent='space-between' sx={{mt:3}}>

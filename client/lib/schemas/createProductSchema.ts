@@ -24,5 +24,4 @@ export const createProductSchema = z.object({
     message: 'Please provide an image',
     path: ['file']
 })
-
 export type CreateProductSchema = z.infer<typeof createProductSchema>;
