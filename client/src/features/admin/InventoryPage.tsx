@@ -8,22 +8,37 @@ import {setPageNumber} from "../catalog/catalogSlice.ts";
 import ProductForm from "./ProductForm.tsx";
 import {useState} from "react";
 import type {Product} from "../../app/models/product.ts";
+import {useDeleteProductMutation} from "./adminApi.ts";
 
 export default function InventoryPage() {
 
     const productParams = useAppSelector(state => state.catalog);
-    const {data} = useFetchProductsQuery(productParams);
+    const {data, refetch} = useFetchProductsQuery(productParams);
     const dispatch = useAppDispatch();
     const [editMode, setEditMode] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
+    const [deleteProduct] = useDeleteProductMutation();
 
     const handleSelectProduct = (product: Product) => {
         setSelectedProduct(product);
         setEditMode(true);
     }
 
-    if(editMode) return <ProductForm setEditMode={setEditMode} product={selectedProduct} />
+    const handleDeleteProduct = async (id: number) => {
+        try {
+            await deleteProduct(id);
+            refetch();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    if(editMode) return <ProductForm
+        setEditMode={setEditMode}
+        product={selectedProduct}
+        refetch={refetch}
+        setSelectedProduct={setSelectedProduct}
+    />
 
 
     return (
@@ -72,7 +87,7 @@ export default function InventoryPage() {
                                 <TableCell align='center'>{product.quantityInStock}</TableCell>
                                 <TableCell align='right'>
                                     <Button onClick={() => handleSelectProduct(product)} startIcon={<Edit />} />
-                                    <Button startIcon={<Delete />} />
+                                    <Button onClick={() => handleDeleteProduct(product.id)} startIcon={<Delete />} />
                                 </TableCell>
                             </TableRow>
                         ))}
