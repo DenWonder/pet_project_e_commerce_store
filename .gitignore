@@ -136,7 +136,6 @@ API/obj
 API/store.db
 API/appsettings.Development.json
 API/appsettings.json
-appsettings.json
 
 client/node_modules
 client/*.local
