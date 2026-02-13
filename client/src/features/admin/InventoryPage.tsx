@@ -7,6 +7,7 @@ import AppPagination from "../../app/shared/components/AppPagination.tsx";
 import {setPageNumber} from "../catalog/catalogSlice.ts";
 import ProductForm from "./ProductForm.tsx";
 import {useState} from "react";
+import type {Product} from "../../app/models/product.ts";
 
 export default function InventoryPage() {
 
@@ -14,8 +15,15 @@ export default function InventoryPage() {
     const {data} = useFetchProductsQuery(productParams);
     const dispatch = useAppDispatch();
     const [editMode, setEditMode] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    if(editMode) return <ProductForm />
+
+    const handleSelectProduct = (product: Product) => {
+        setSelectedProduct(product);
+        setEditMode(true);
+    }
+
+    if(editMode) return <ProductForm setEditMode={setEditMode} product={selectedProduct} />
 
 
     return (
@@ -63,7 +71,7 @@ export default function InventoryPage() {
                                 <TableCell align='center'>{product.brand}</TableCell>
                                 <TableCell align='center'>{product.quantityInStock}</TableCell>
                                 <TableCell align='right'>
-                                    <Button startIcon={<Edit />} />
+                                    <Button onClick={() => handleSelectProduct(product)} startIcon={<Edit />} />
                                     <Button startIcon={<Delete />} />
                                 </TableCell>
                             </TableRow>

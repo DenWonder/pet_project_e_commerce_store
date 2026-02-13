@@ -6,20 +6,31 @@ import AppTextInput from "../../app/shared/components/AppTextInput"
 import { useFetchFiltersQuery } from "../catalog/catalogApi"
 import AppSelectInput from "../../app/shared/components/AppSelectInput"
 import AppDropzone from "../../app/shared/components/AppDropzone"
-/*import { Product } from "../../app/models/product"
-import { useEffect } from "react"
+import type {Product} from "../../app/models/product.ts";
+import {useEffect} from "react";
+/*
 import { useCreateProductMutation, useUpdateProductMutation } from "./adminApi"
 import { LoadingButton } from "@mui/lab"
 import { handleApiError } from "../../lib/util"*/
 
+type Props = {
+    setEditMode: (value: boolean) => void;
+    product: Product | null;
+}
 
-export default function ProductForm(){
-    const {control, handleSubmit, watch} = useForm<CreateProductSchema>({
+export default function ProductForm({setEditMode, product}: Props){
+    const {control, handleSubmit, watch, reset} = useForm({
         mode: 'onTouched',
         resolver: zodResolver(createProductSchema)
     })
     const watchFile = watch('file');
     const {data} = useFetchFiltersQuery();
+
+    useEffect(()=>{
+        if(product){
+            reset(product);
+        }
+    }, [product, reset]);
 
     const onSubmit = (data: CreateProductSchema) => {
         console.log(data);
@@ -74,11 +85,14 @@ export default function ProductForm(){
                         {watchFile?.preview ? (
                             <img src={watchFile.preview} alt='preview of image'
                                  style={{maxHeight: 200}} />
-                        ) :  null}
+                        ) : product?.pictureUrl ? (
+                            <img src={product?.pictureUrl} alt='preview of image'
+                                 style={{maxHeight: 200}} />
+                        ) : null}
                     </Grid2>
                 </Grid2>
                 <Box display='flex' justifyContent='space-between' sx={{mt:3}}>
-                    <Button variant='contained' color='inherit'>Cancel</Button>
+                    <Button onClick={() => setEditMode(false)} variant='contained' color='inherit'>Cancel</Button>
                     <Button variant='contained' color='success' type="submit">Submit</Button>
                 </Box>
             </form>
