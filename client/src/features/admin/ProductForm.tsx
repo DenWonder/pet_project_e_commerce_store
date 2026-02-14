@@ -20,7 +20,7 @@ type Props = {
 }
 
 export default function ProductForm({setEditMode, product, refetch, setSelectedProduct}: Props){
-    const {control, handleSubmit, watch, reset, setError, formState: {isSubmitting}} = useForm<CreateProductSchema>({
+    const {control, handleSubmit, watch, reset, setError, formState: {isSubmitting}} = useForm({
         mode: 'onTouched',
         resolver: zodResolver(createProductSchema)
     })
@@ -33,7 +33,10 @@ export default function ProductForm({setEditMode, product, refetch, setSelectedP
         if(product) reset(product);
 
         return () => {
-            if(watchFile) URL.revokeObjectURL(watchFile.preview);
+            if(watchFile) {
+                // @ts-ignore
+                URL.revokeObjectURL(watchFile.preview);
+            }
         }
     }, [product, reset]);
 
@@ -109,7 +112,11 @@ export default function ProductForm({setEditMode, product, refetch, setSelectedP
                     <Grid2 size={12} display='flex' justifyContent='space-between'
                            alignItems='center'>
                         <AppDropzone name="file" control={control} />
-                        {watchFile?.preview ? (
+
+                        {
+                            // @ts-ignore
+                            watchFile?.preview ? (
+                            // @ts-ignore
                             <img src={watchFile.preview} alt='preview of image'
                                  style={{maxHeight: 200}} />
                         ) : product?.pictureUrl ? (
